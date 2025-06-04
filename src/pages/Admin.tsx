@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { supabase } from '@/integrations/supabase/client';
@@ -431,7 +430,13 @@ const Admin = () => {
             ) : skills.length === 0 ? (
               <div className="text-center py-10 border rounded-lg bg-muted/20">
                 <p className="text-muted-foreground mb-2">You need to create skills first before adding modules.</p>
-                <Button onClick={() => document.querySelector('[data-value="skills"]')?.click()} variant="outline">
+                <Button 
+                  onClick={() => {
+                    const skillsTab = document.querySelector('[value="skills"]') as HTMLElement;
+                    skillsTab?.click();
+                  }} 
+                  variant="outline"
+                >
                   Go to Skills Tab
                 </Button>
               </div>

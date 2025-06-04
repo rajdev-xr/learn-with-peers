@@ -13,14 +13,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { LogOut, User } from 'lucide-react';
-import { useMobile } from '@/hooks/use-mobile';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Menu } from 'lucide-react';
 
 export function Header() {
   const { user, signOut, userProfile } = useAuth();
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   
   const userInitials = user?.email 
     ? user.email.substring(0, 2).toUpperCase()
