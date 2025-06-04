@@ -27,7 +27,7 @@ const Skills = () => {
   const [userProgress, setUserProgress] = useState<Record<string, UserProgress>>({});
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [categories, setCategories] = useState<string[]>([]);
   const { user } = useAuth();
 
@@ -119,7 +119,7 @@ const Skills = () => {
   const filteredSkills = skills.filter(skill => {
     const matchesSearch = skill.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          skill.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = categoryFilter ? skill.category === categoryFilter : true;
+    const matchesCategory = categoryFilter === 'all' ? true : skill.category === categoryFilter;
     return matchesSearch && matchesCategory;
   });
 
@@ -145,7 +145,7 @@ const Skills = () => {
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Categories</SelectItem>
+              <SelectItem value="all">All Categories</SelectItem>
               {categories.map((category) => (
                 <SelectItem key={category} value={category}>
                   {category}
