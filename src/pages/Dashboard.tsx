@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { StatsCard } from '@/components/dashboard/StatsCard';
-import { LevelProgress } from '@/components/dashboard/LevelProgress';
+import { EnhancedLevelProgress } from '@/components/dashboard/EnhancedLevelProgress';
+import { BadgeDisplay } from '@/components/dashboard/BadgeDisplay';
 import { SkillCard } from '@/components/skills/SkillCard';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
@@ -28,6 +29,13 @@ interface SkillProgress {
   progress: number;
   totalModules: number;
   completedModules: number;
+}
+
+interface UserBadge {
+  id: string;
+  badge_type: string;
+  earned_at: string;
+  xp_threshold: number;
 }
 
 // Calculate level based on XP
@@ -58,6 +66,7 @@ const getXPForNextLevel = (xp: number): number => {
 
 const Dashboard = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
+  const [userBadges, setUserBadges] = useState<UserBadge[]>([]);
   const [inProgressSkills, setInProgressSkills] = useState<SkillProgress[]>([]);
   const [loading, setLoading] = useState(true);
   const { user, userProfile } = useAuth();
@@ -74,6 +83,16 @@ const Dashboard = () => {
           .eq('user_id', user.id);
         
         if (countError) throw countError;
+        
+        // Fetch user badges
+        const { data: badgesData, error: badgesError } = await supabase
+          .from('user_badges')
+          .select('*')
+          .eq('user_id', user.id)
+          .order('earned_at', { ascending: false });
+        
+        if (badgesError) throw badgesError;
+        setUserBadges(badgesData || []);
         
         // Calculate level and XP to next level
         const xp = userProfile.xp || 0;
@@ -198,7 +217,7 @@ const Dashboard = () => {
           </p>
         </div>
         
-        <div className="grid gap-6 md:grid-cols-3 mb-8">
+        <div className="grid gap-6 md:grid-cols-4 mb-8">
           <StatsCard
             title="Completed Modules"
             value={userData?.completedModules || 0}
@@ -220,10 +239,18 @@ const Dashboard = () => {
             icon={<Trophy size={20} />}
             description="Experience points earned"
           />
+
+          {/* Badge Display Card */}
+          <div className="rounded-lg border bg-card p-6">
+            <BadgeDisplay
+              currentXP={userData?.xp || 0}
+              userBadges={userBadges}
+            />
+          </div>
         </div>
         
         {userData && (
-          <LevelProgress
+          <EnhancedLevelProgress
             level={userData.level}
             xp={userData.xp}
             xpToNextLevel={userData.xpToNextLevel}

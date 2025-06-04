@@ -179,6 +179,30 @@ export type Database = {
         }
         Relationships: []
       }
+      user_badges: {
+        Row: {
+          badge_type: string
+          earned_at: string
+          id: string
+          user_id: string
+          xp_threshold: number
+        }
+        Insert: {
+          badge_type: string
+          earned_at?: string
+          id?: string
+          user_id: string
+          xp_threshold: number
+        }
+        Update: {
+          badge_type?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+          xp_threshold?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
