@@ -4,28 +4,21 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { toast } from 'sonner';
+import { useAuth } from '@/context/AuthContext';
+import { Loader } from '@/components/ui/loader';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { signIn } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate login
     try {
-      // This will be replaced with actual Supabase authentication later
-      if (email && password) {
-        toast.success('Login successful');
-        setTimeout(() => {
-          window.location.href = '/';
-        }, 1000);
-      } else {
-        toast.error('Please provide both email and password');
-      }
+      await signIn(email, password);
     } finally {
       setLoading(false);
     }
@@ -70,6 +63,7 @@ export function LoginForm() {
         </div>
         
         <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? <Loader className="mr-2 h-4 w-4" /> : null}
           {loading ? 'Signing in...' : 'Sign In'}
         </Button>
       </form>

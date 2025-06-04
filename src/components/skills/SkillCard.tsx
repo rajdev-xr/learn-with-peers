@@ -2,6 +2,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 interface SkillCardProps {
   id: string;
@@ -24,11 +27,14 @@ export function SkillCard({
 }: SkillCardProps) {
   return (
     <Link to={`/skills/${id}`}>
-      <div className="skill-card group">
+      <div className={cn(
+        "rounded-lg border bg-card p-6 h-full flex flex-col relative transition-all duration-200",
+        "hover:border-primary/20 hover:shadow-md"
+      )}>
         <div className="absolute top-4 right-4">
-          <span className="badge bg-accent/10 text-accent border-accent/20">
+          <Badge variant="outline" className="bg-accent/10 text-accent border-accent/20">
             {category}
-          </span>
+          </Badge>
         </div>
         
         <h3 className="font-semibold text-xl mb-2 pr-14">{title}</h3>
@@ -40,17 +46,12 @@ export function SkillCard({
             <span className="font-medium">{Math.round(progress)}%</span>
           </div>
           
-          <div className="progress-bar">
-            <div 
-              className="progress-bar-fill animate-progress-fill"
-              style={{ width: `${progress}%` }} 
-            />
-          </div>
+          <Progress value={progress} className="h-2" />
           
           <div className="flex justify-between mt-2 text-sm">
             <span className="text-muted-foreground">{completedModules} of {totalModules} modules</span>
             <span className="text-primary flex items-center gap-1 font-medium group-hover:underline">
-              View Skill <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              View Skill <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
             </span>
           </div>
         </div>

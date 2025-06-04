@@ -1,73 +1,90 @@
 
 import React from 'react';
-import { Menu, Bell, Sun, Moon, User } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { LogOut, User } from 'lucide-react';
+import { useMobile } from '@/hooks/use-mobile';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sidebar } from '@/components/layout/Sidebar';
+import { Menu } from 'lucide-react';
 
-interface HeaderProps {
-  toggleSidebar: () => void;
-  isDarkMode: boolean;
-  toggleDarkMode: () => void;
-  user?: {
-    name?: string;
-    email?: string;
-    role?: string;
-  } | null;
-  onLogout: () => void;
-}
-
-export function Header({ toggleSidebar, isDarkMode, toggleDarkMode, user, onLogout }: HeaderProps) {
+export function Header() {
+  const { user, signOut, userProfile } = useAuth();
+  const isMobile = useMobile();
+  
+  const userInitials = user?.email 
+    ? user.email.substring(0, 2).toUpperCase()
+    : 'U';
+  
+  const userLevel = userProfile?.xp ? Math.floor(userProfile.xp / 100) + 1 : 1;
+    
   return (
-    <header className="sticky top-0 z-40 flex h-14 items-center gap-4 border-b bg-background px-4 sm:px-6">
-      <Button variant="ghost" size="icon" onClick={toggleSidebar} className="md:hidden">
-        <Menu size={20} />
-      </Button>
-      
-      <div className="flex-1" />
-      
-      <div className="flex items-center gap-2">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={toggleDarkMode} 
-          className="text-foreground/70 hover:text-foreground"
-        >
-          {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-        </Button>
-        
-        <Button 
-          variant="ghost" 
-          size="icon"
-          className="text-foreground/70 hover:text-foreground relative"
-        >
-          <Bell size={18} />
-          <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-accent" />
-        </Button>
-        
-        {user ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="gap-2 text-foreground/70 hover:text-foreground"
-              >
-                <User size={18} />
-                <span className="hidden sm:inline-block">{user.name || user.email}</span>
+    <header className="border-b px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div className="flex items-center gap-4">
+        {isMobile && (
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Menu className="h-5 w-5" />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem className="font-medium">{user.email}</DropdownMenuItem>
-              <DropdownMenuItem className="font-medium">{user.role || 'User'}</DropdownMenuItem>
-              <DropdownMenuItem onClick={onLogout}>Log out</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : (
-          <Button variant="outline" size="sm" className="hidden sm:inline-block" asChild>
-            <a href="/login">Log in</a>
-          </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 max-w-xs">
+              <Sidebar />
+            </SheetContent>
+          </Sheet>
         )}
+        
+        <div className="flex items-center gap-2">
+          <div className="md:hidden flex h-8 w-8 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <span className="font-bold">S</span>
+          </div>
+        </div>
       </div>
+      
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+            <Avatar className="h-9 w-9">
+              <AvatarFallback>{userInitials}</AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end">
+          <DropdownMenuLabel>
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">{user?.email}</p>
+              <p className="text-xs leading-none text-muted-foreground">
+                Level {userLevel} {userProfile?.role === 'admin' ? '• Admin' : ''}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuGroup>
+            <DropdownMenuItem className="cursor-pointer">
+              <User className="mr-2 h-4 w-4" />
+              <span>Profile</span>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem 
+            onClick={() => signOut()} 
+            className="cursor-pointer text-destructive focus:text-destructive"
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            <span>Log out</span>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </header>
   );
 }
