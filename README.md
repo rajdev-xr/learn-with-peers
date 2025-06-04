@@ -1,73 +1,93 @@
-# Welcome to your Lovable project
+# 🚀 Live Demo
 
-## Project info
+👉 [Check out the live app here](https://learn-with-peers.vercel.app/)
 
-**URL**: https://lovable.dev/projects/5b4ad8fe-54d6-4053-b9c9-29977bba428a
 
-## How can I edit this code?
 
-There are several ways of editing your application.
+# 🚀 SkillSync – Curated Learning with XP & Badges
 
-**Use Lovable**
+SkillSync is a full-stack web app that helps learners master real-world skills through curated learning paths, track progress with XP, and stay motivated with gamified badges.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/5b4ad8fe-54d6-4053-b9c9-29977bba428a) and start prompting.
+### 🧠 Built with:
+- **Next.js (App Router)** – frontend & server routes
+- **Supabase** – PostgreSQL, Auth, RLS, and Realtime DB
+- **Tailwind CSS** – responsive UI styling
+- **PostgreSQL Triggers + Policies** – secure automation
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 📚 Features
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 👤 Authentication
+- Email/password login and signup via Supabase Auth
+- Secure, role-based access to skill progress and badges
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 🧩 Skill Library
+- 15 diverse skills across categories: Programming, Design, AI, Career & Business
+- Each skill contains 3 curated learning modules (video, blog, docs)
+- Learners earn XP for completing modules
 
-Follow these steps:
+### 🧠 XP Tracking System
+- Each module gives XP (10–35 points)
+- Profile stores real-time XP tally
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 🏅 Badge Rewards System
+- Auto-awarded badges as XP grows:
+  - 🟢 Novice – 100 XP  
+  - 🔵 Intermediate – 300 XP  
+  - 🟠 Advanced – 600 XP  
+  - 🔴 Expert – 1000 XP
+- Users can view earned badges on dashboard
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 🔐 Security
+- Full Supabase RLS (Row Level Security)
+- Policies restrict badge access to rightful users
+- Secure XP mutation triggers badge automation
 
-# Step 3: Install the necessary dependencies.
-npm i
+---
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+
+## 🛠️ How to Run Locally
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/YOUR_USERNAME/skill-sync.git
+cd skill-sync
+
+# 2. Install dependencies
+npm install
+
+# 3. Set up .env.local
+cp .env.example .env.local
+# Add your Supabase project URL and anon/public keys
+
+# 4. Run the app
 npm run dev
-```
 
-**Edit a file directly in GitHub**
+🧪 Database Schema Summary
+skills
+List of skills (id, title, description, category)
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+modules
+Each skill contains multiple ordered modules with resource links
 
-**Use GitHub Codespaces**
+profiles
+Extended user profile with XP
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+user_badges
+Tracks badge type (Novice → Expert), linked to profiles
 
-## What technologies are used for this project?
+🔁 Automated XP → Badge Flow
+award_badges() PostgreSQL function checks XP on every profile update
 
-This project is built with:
+Triggers award new badges only if not already earned
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Badge data is securely stored and queryable per user
 
-## How can I deploy this project?
+✨ Future Ideas (Not Yet Implemented)
+✅ Peer discussion under each module
 
-Simply open [Lovable](https://lovable.dev/projects/5b4ad8fe-54d6-4053-b9c9-29977bba428a) and click on Share -> Publish.
+✅ Social leaderboard (XP based)
 
-## Can I connect a custom domain to my Lovable project?
+✅ Admin panel to add/edit skills and modules
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
